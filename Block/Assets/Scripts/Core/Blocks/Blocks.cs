@@ -1,0 +1,42 @@
+using UnityEngine;
+
+public class Blocks : MonoBehaviour
+{
+    [SerializeField] private Block[] blocks;
+    private int blockCount = 0;
+    void Start()
+    {
+        SetupBlocks();
+    }
+    public void SetupBlocks()
+    {
+        float blocksWith = (float)Board.Size/this.blocks.Length;
+        float cellSizeScale = (float)Board.Size/(Block.Size * this.blocks.Length + this.blocks.Length + 1);
+        for (int i = 0; i < this.blocks.Length; i++)
+        {
+            this.blocks[i].transform.position = new(blocksWith * (i + 0.5f), -0.25f - cellSizeScale * 4.0f, 0.0f);
+            this.blocks[i].transform.localScale = new(cellSizeScale, cellSizeScale, cellSizeScale);
+            this.blocks[i].Initialize();
+        }
+        Generate();
+    }
+    public void Generate()
+    {
+        for (int i = 0;i < this.blocks.Length;i++)
+        {
+            int index = Random.Range(0, Polyominos.Length());
+            this.blocks[i].gameObject.SetActive(true);
+            this.blocks[i].Show(index);
+            this.blockCount++;
+        }
+    }
+    public void Remove()
+    {
+        this.blockCount--;
+        if (this.blockCount <= 0)
+        {
+            this.blockCount = 0;
+            Generate();
+        }    
+    }
+}
