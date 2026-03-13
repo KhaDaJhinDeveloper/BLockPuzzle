@@ -3,10 +3,12 @@ using UnityEngine;
 public class Blocks : MonoBehaviour
 {
     [SerializeField] private Block[] blocks;
+    private Board board;
     private int blockCount = 0;
     void Start()
     {
         SetupBlocks();
+        this.board = GameObject.FindFirstObjectByType<Board>();
     }
     public void SetupBlocks()
     {
@@ -39,4 +41,12 @@ public class Blocks : MonoBehaviour
             Generate();
         }    
     }
+    public void CheckCanPlace()
+    {
+        foreach (var block in this.blocks)
+        {
+            if (!this.board.CanPlace(block.PolyominoIndex))
+                Debug.Log("GameOver");
+        }
+    }    
 }

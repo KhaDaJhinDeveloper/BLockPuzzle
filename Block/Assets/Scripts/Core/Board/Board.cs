@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class Board : MonoBehaviour
 {
@@ -15,6 +12,7 @@ public class Board : MonoBehaviour
 
     private HashSet<int> fullLineColumns = new ();
     private HashSet<int> fullLineRows = new ();
+    private List<Vector2Int> hoverLinesFull = new();
     void Start()
     {
         Initialize();
@@ -31,6 +29,7 @@ public class Board : MonoBehaviour
             }
         }             
     }
+#region HoverDrag
     public void HoverBoard(Vector2Int point, int polyominoIndex)
     {
         int[,] polyomino = Polyominos.Get(polyominoIndex);
@@ -38,7 +37,11 @@ public class Board : MonoBehaviour
         int polyominoCol = polyomino.GetLength(1);
         UnHover();
         GethoverPoint(point, polyominoRow, polyominoCol, polyomino);
-        if (hoverPoints.Count > 0) Hover();
+        if (hoverPoints.Count > 0)
+        {
+            Hover();
+            HoverFullLines();
+        }
     }
     private void GethoverPoint(Vector2Int point, int polyominRows, int polyomiColums, int[,] polyominos)
     {
@@ -48,7 +51,7 @@ public class Board : MonoBehaviour
             {
                 if (polyominos[i, j] > 0)
                 {
-                    Vector2Int hoverpoint = point + new Vector2Int( j, -i + 3);
+                    Vector2Int hoverpoint = point + new Vector2Int(j , -i +1);
                     if (!IsValidPoint(hoverpoint))
                     {
                         this.hoverPoints.Clear();
@@ -76,13 +79,24 @@ public class Board : MonoBehaviour
     }
     private void UnHover()
     {
+        //HoverNormal
         foreach (var hoverPoint in this.hoverPoints)
         {
             this.data[hoverPoint.y, hoverPoint.x] = 0;
             this.cells[hoverPoint.x, hoverPoint.y].Hide();
         }
         this.hoverPoints.Clear();
+        //HoverWhenFull
+        foreach (var hoverPoint in this.hoverLinesFull)
+        {
+            if(data[hoverPoint.y, hoverPoint.x] == 2)
+                this.cells[hoverPoint.x, hoverPoint.y].Normal();
+            else this.cells[hoverPoint.x, hoverPoint.y].Hide();
+        }
+        this.hoverLinesFull.Clear();
     }
+#endregion
+#region Placed_Block
     public bool IsPlace(Vector2Int point, int polyominoIndex )
     {
         int[,] polyomino = Polyominos.Get(polyominoIndex);
@@ -97,7 +111,7 @@ public class Board : MonoBehaviour
         }
         return false;
     }
-    private List<Vector2Int> Place(Vector2Int point)
+    private void Place(Vector2Int point)
     {
         List<Vector2Int> placedPoint = new (this.hoverPoints);
         foreach (var hoverPoint in this.hoverPoints)
@@ -107,29 +121,35 @@ public class Board : MonoBehaviour
         }
         CheckAndClear(placedPoint);
         this.hoverPoints.Clear();
-        return placedPoint;
+        //return placedPoint;
     }
+#endregion
+#region ClearRowCol_Logic
     private void CheckAndClear(List<Vector2Int> placedPoint)
     {
-        foreach(Vector2Int point in placedPoint)
+        this.fullLineRows.Clear();
+        this.fullLineColumns.Clear();
+
+        foreach (Vector2Int point in placedPoint)
         {
-            this.fullLineRows.Add(point.x);
-            this.fullLineColumns.Add(point.y);
-        } 
-        foreach(int row in this.fullLineRows)
+            this.fullLineRows.Add(point.y);
+            this.fullLineColumns.Add(point.x);
+        }
+        List<int> rowsToClear = new();
+        List<int> colsToClear = new();
+
+        foreach (int row in this.fullLineRows)
         {
-            if(IsRowFull(row))
-            {
-                ClearRow(row);
-            }
+            if (IsRowFull(row)) 
+                rowsToClear.Add(row);
         }
         foreach (int col in this.fullLineColumns)
         {
-            if (IsColumnFull(col))
-            {
-                ClearColumn(col);
-            }
+            if (IsColumnFull(col)) 
+                colsToClear.Add(col);
         }
+        foreach (int row in rowsToClear) ClearRow(row);
+        foreach (int col in colsToClear) ClearColumn(col);
     }
     private bool IsRowFull(int row)
     {
@@ -163,4 +183,85 @@ public class Board : MonoBehaviour
             this.cells[col, row].Hide();
         }
     }
+#endregion
+#region HoverWhenFull
+    private void HoverFullLines()
+    {
+        HashSet<int> rowsToCheck = new();
+        HashSet<int> colsToCheck = new();
+        foreach(Vector2Int point in this.hoverPoints)
+        {
+            rowsToCheck.Add(point.y);
+            colsToCheck.Add(point.x);
+        }
+        foreach (int row in rowsToCheck)
+        {
+            if(IsRowFullWithHover(row))
+            {
+                for (int col = 0; col < Size; col++)
+                    this.hoverLinesFull.Add(new Vector2Int(col, row));
+            }
+        }
+        foreach (int col in colsToCheck)
+        {
+            if (IsColumnFullWithHover(col))
+            {
+                for (int row = 0; row < Size; row++)
+                    this.hoverLinesFull.Add(new Vector2Int(col, row));
+            }
+        }
+        foreach (var p in this.hoverLinesFull)
+            cells[p.x, p.y].Hover();
+    }
+    private bool IsRowFullWithHover(int row)
+    {
+        for (int col = 0; col < Size; col++)
+        {
+            if (this.data[row, col] == 0) return false;
+        }
+        return true;
+    }
+    private bool IsColumnFullWithHover(int col)
+    {
+        for (int row = 0; row < Size; row++)
+        {
+            if (this.data[row, col] == 0) return false;
+        }
+        return true;
+    }
+#endregion
+#region CheckGameOver
+    public bool CanPlace(int polyominosIndex)
+    {
+        int[,] polyominos = Polyominos.Get(polyominosIndex);
+        int row = polyominos.GetLength(0);
+        int col = polyominos.GetLength(1);
+        List<Vector2Int> result = new();
+        for (int i = 0; i < Size; i++)
+        {
+            for (int j = 0; j < Size; j++)
+            {
+                if(TryGetPoints(new Vector2Int(i, j), row, col, polyominos, result))
+                    return true;
+            }
+        }
+        return false;
+    }
+    private bool TryGetPoints(Vector2Int point ,int polyominosRow, int polyominosColumn, int[,] polyominos , List<Vector2Int> result)
+    {
+        for (int i = 0; i < polyominosRow; i++)
+        {
+            for (int j = 0; j < polyominosColumn; j++)
+            {
+                if (polyominos[i, j] > 0)
+                {
+                    Vector2Int hoverpoint = point + new Vector2Int(j, -i + 1);
+                    if(!IsValidPoint(hoverpoint)) return false;
+                    result.Add(hoverpoint);
+                }
+            }
+        }
+        return result.Count > 0;
+    }    
+#endregion
 }

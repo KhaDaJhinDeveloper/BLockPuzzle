@@ -25,6 +25,9 @@ public class Block : MonoBehaviour
     private int polyominoIndex;
     #endregion
     private Blocks blocks;
+
+    public int PolyominoIndex { get => polyominoIndex;}
+
     private void Awake()
     {
         this.mainCamera = Camera.main;
@@ -57,7 +60,7 @@ public class Block : MonoBehaviour
             {
                 if (polyomino[i,j] > 0)
                 {
-                    this.cells[i, j].transform.localPosition = new(j - center.x, -(i - center.y) , 0);
+                    this.cells[i, j].transform.localPosition = new(j - center.x, -(i - center.y + 1.0f) , 0);
                     this.cells[i, j].Normal();
                 }    
             }    
@@ -108,6 +111,7 @@ public class Block : MonoBehaviour
         {
             gameObject.SetActive(false);
             this.blocks.Remove();
+            this.blocks.CheckCanPlace();
         }
         transform.position = this.pos;
         transform.localScale = this.posscale;
