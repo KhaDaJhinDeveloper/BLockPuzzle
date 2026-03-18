@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine.UI;
 public class BaseButton : MonoBehaviour
 {
-    protected Button button;
+    protected Button button;  
     protected virtual void Start()
     {
         LoadComponents();
@@ -19,7 +19,7 @@ public class BaseButton : MonoBehaviour
     }
     protected virtual void OnClick()
     {
-            
+
     }
     protected virtual void LoadComponents()
     {
