@@ -43,10 +43,19 @@ public class Blocks : MonoBehaviour
     }
     public void CheckCanPlace()
     {
+        int count = 0;
         foreach (var block in this.blocks)
         {
-            if (!this.board.CanPlace(block.PolyominoIndex))
-                Debug.Log("GameOver");
+            if (this.board.CanPlace(block.PolyominoIndex) && block.gameObject.activeInHierarchy)
+                count++;
         }
-    }    
+        //GAME OVER
+        if (count == 0)
+            EventManager.Instance.TriggerEvent(EventName.EVENT_SHOWGAMEOVER);
+    }   
+    public void Retry()
+    {
+        this.blockCount = 0;
+        Generate();
+    }
 }

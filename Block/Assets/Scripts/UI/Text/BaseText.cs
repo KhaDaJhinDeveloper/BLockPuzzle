@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class BaseText : MonoBehaviour
+public abstract class BaseText : MonoBehaviour
 {
     private TextMeshProUGUI m_TextMeshProUGUI;
     protected virtual void Start()

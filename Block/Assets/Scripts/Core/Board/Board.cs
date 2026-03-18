@@ -13,9 +13,13 @@ public class Board : MonoBehaviour
     private HashSet<int> fullLineColumns = new ();
     private HashSet<int> fullLineRows = new ();
     private List<Vector2Int> hoverLinesFull = new();
+
+    private int clearScore = 0;
+    private ScoreManager scoreManager;
     void Start()
     {
         Initialize();
+        this.scoreManager = GameObject.FindFirstObjectByType<ScoreManager>();
     }
     public void Initialize()
     {
@@ -140,16 +144,25 @@ public class Board : MonoBehaviour
 
         foreach (int row in this.fullLineRows)
         {
-            if (IsRowFull(row)) 
+            if (IsRowFull(row))
+            {
                 rowsToClear.Add(row);
+                this.clearScore++;
+            }
+
         }
         foreach (int col in this.fullLineColumns)
         {
-            if (IsColumnFull(col)) 
+            if (IsColumnFull(col))
+            {
                 colsToClear.Add(col);
+                this.clearScore++;
+            }
         }
         foreach (int row in rowsToClear) ClearRow(row);
         foreach (int col in colsToClear) ClearColumn(col);
+        this.scoreManager.IncreaseScore(ScoreAmplification(clearScore));
+        clearScore = 0;
     }
     private bool IsRowFull(int row)
     {
@@ -262,6 +275,44 @@ public class Board : MonoBehaviour
             }
         }
         return result.Count > 0;
+    }
+    #endregion
+#region Score
+    private int ScoreAmplification(int score)
+    {
+        switch (score)
+        {
+            case 0:
+                return 0;
+            case 1:
+                return 5;
+            case 2:
+                return 10;
+            case 3:
+                return 20;
+            case 4:
+                return 30;
+            case 5:
+                return 50;
+            case 6:
+                return 100;
+            default: return 0;
+        }
     }    
 #endregion
+    public void Retry()
+    {
+        this.hoverPoints.Clear();
+        this.hoverLinesFull.Clear();
+        this.fullLineColumns.Clear();
+        this.fullLineRows.Clear();
+        for (int i = 0; i < Size; i++)
+        {
+            for (int j = 0; j < Size; j++)
+            {
+                this.data[j, i] = 0;
+                this.cells[i, j].Hide();
+            }
+        }
+    }
 }
