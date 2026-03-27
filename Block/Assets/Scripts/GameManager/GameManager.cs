@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
@@ -10,6 +12,8 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         SceneManager.sceneLoaded += OnloadScene;
+        StartCoroutine(Delay());
+        SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_MainMenu);
     }
     private void Reset()
     {
@@ -25,12 +29,18 @@ public class GameManager : Singleton<GameManager>
     }
     public void Play()
     {
+        SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_playingGame);
         EventManager.Instance.TriggerEvent(EventName.EVENT_HIDEMAINMENU);
     }    
     public void Retry()
     {
         LoadComponents();
     }    
+    public void GameOVer()
+    {
+        SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_GameOver);
+        EventManager.Instance.TriggerEvent(EventName.EVENT_SHOWGAMEOVER);
+    }
     private void LoadComponents()
     {
         this.newBestScore = false;
@@ -41,5 +51,9 @@ public class GameManager : Singleton<GameManager>
         this.board.Retry();
         this.blocks.Retry();
         this.ScoreManager.Retry();
+    }
+    private IEnumerator Delay()
+    {
+        yield return null;
     }
 }

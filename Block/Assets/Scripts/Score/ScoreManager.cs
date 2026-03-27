@@ -13,6 +13,7 @@ public class ScoreManager : MonoBehaviour
         if(this.curentScore > this.bestScore)
         {
             this.bestScore = this.curentScore;
+            SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_NewScore);
             GameManager.Instance.newBestScore = true;
         }
     }

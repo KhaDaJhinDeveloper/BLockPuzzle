@@ -18,15 +18,9 @@ public class GameOver : MonoBehaviour
     {
         this.gameOver_UI.SetActive(false); 
     }
-    private void OnDestroy()
-    {
-        if (EventManager.Instance == null)
-        {
-            Debug.Log("null");
-            return;
-        }
-
-        EventManager.Instance.UnSubscribe(EventName.EVENT_SHOWGAMEOVER, UIShow);
-        EventManager.Instance.UnSubscribe(EventName.EVENT_HIDEGAMEOVER, UIHide);
-    }
+    //private void OnDestroy()
+    //{
+    //    EventManager.Instance.UnSubscribe(EventName.EVENT_SHOWGAMEOVER, UIShow);
+    //    EventManager.Instance.UnSubscribe(EventName.EVENT_HIDEGAMEOVER, UIHide);
+    //}
 }

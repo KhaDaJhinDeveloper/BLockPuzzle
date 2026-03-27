@@ -19,7 +19,7 @@ public class BaseButton : MonoBehaviour
     }
     protected virtual void OnClick()
     {
-
+        SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_BClickButton);
     }
     protected virtual void LoadComponents()
     {

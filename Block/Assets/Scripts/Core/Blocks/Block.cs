@@ -78,6 +78,7 @@ public class Block : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_BlockDown);
         transform.localPosition = this.pos + new Vector3 (0, 2.0f, 0);
         transform.localScale = Vector3.one;
         this.mousePosition = Input.mousePosition;
@@ -109,6 +110,7 @@ public class Block : MonoBehaviour
         this.currentDragPoint = Vector2Int.RoundToInt(this.transform.position - this.center);
         if (this.board.IsPlace(this.currentDragPoint, this.polyominoIndex))
         {
+            SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_PlaceBlock);
             gameObject.SetActive(false);
             this.blocks.Remove();
             this.blocks.CheckCanPlace();

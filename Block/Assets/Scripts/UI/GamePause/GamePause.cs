@@ -19,9 +19,9 @@ public class GamePause : MonoBehaviour
         this.menuPause.SetActive(false);
         Time.timeScale = 1f;
     }
-    private void OnDestroy()
-    {
-        EventManager.Instance.UnSubscribe(EventName.EVENT_SHOWMENUPAUSE, GamePauseShow);
-        EventManager.Instance.UnSubscribe(EventName.EVENT_HIDEMENUPAUSE, GamePauseHide);
-    }
+    //private void OnDestroy()
+    //{
+    //    EventManager.Instance.UnSubscribe(EventName.EVENT_SHOWMENUPAUSE, GamePauseShow);
+    //    EventManager.Instance.UnSubscribe(EventName.EVENT_HIDEMENUPAUSE, GamePauseHide);
+    //}
 }

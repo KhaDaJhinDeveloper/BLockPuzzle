@@ -51,7 +51,7 @@ public class Blocks : MonoBehaviour
         }
         //GAME OVER
         if (count == 0)
-            EventManager.Instance.TriggerEvent(EventName.EVENT_SHOWGAMEOVER);
+            GameManager.Instance.GameOVer();
     }   
     public void Retry()
     {
