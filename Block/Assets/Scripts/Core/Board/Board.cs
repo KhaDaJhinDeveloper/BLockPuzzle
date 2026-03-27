@@ -146,6 +146,7 @@ public class Board : MonoBehaviour
         {
             if (IsRowFull(row))
             {
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_Score);
                 rowsToClear.Add(row);
                 this.clearScore++;
             }
@@ -155,6 +156,7 @@ public class Board : MonoBehaviour
         {
             if (IsColumnFull(col))
             {
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_Score);
                 colsToClear.Add(col);
                 this.clearScore++;
             }
@@ -279,7 +281,7 @@ public class Board : MonoBehaviour
     #endregion
 #region Score
     private int ScoreAmplification(int score)
-    {
+    {       
         switch (score)
         {
             case 0:

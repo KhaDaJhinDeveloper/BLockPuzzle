@@ -15,9 +15,9 @@ public class MainMenu : MonoBehaviour
     {
         this.mainMenu.SetActive(false);
     }
-    private void OnDestroy()
-    {
-        EventManager.Instance.UnSubscribe(EventName.EVENT_SHOWMAINMENU, MainMenuShow);
-        EventManager.Instance.UnSubscribe(EventName.EVENT_HIDEMAINMENU, MainMenuHide);
-    }
+    //private void OnDestroy()
+    //{
+    //    EventManager.Instance.UnSubscribe(EventName.EVENT_SHOWMAINMENU, MainMenuShow);
+    //    EventManager.Instance.UnSubscribe(EventName.EVENT_HIDEMAINMENU, MainMenuHide);
+    //}
 }
