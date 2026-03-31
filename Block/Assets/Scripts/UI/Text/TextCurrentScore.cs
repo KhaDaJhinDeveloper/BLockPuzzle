@@ -11,6 +11,6 @@ public class TextCurrentScore : BaseText
     protected override void Update()
     {
         base.Update();
-        SetText(this.scoreManager.CurentScore.ToString());
+        SetText(this.scoreManager.curentScore.ToString());
     }
 }

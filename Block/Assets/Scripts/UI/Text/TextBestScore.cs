@@ -11,6 +11,6 @@ public class TextBestScore : BaseText
     protected override void Update()
     {
         base.Update();
-        SetText(this.scoreManager.BestScore.ToString());
+        SetText(this.scoreManager.bestScore.ToString());
     }
 }

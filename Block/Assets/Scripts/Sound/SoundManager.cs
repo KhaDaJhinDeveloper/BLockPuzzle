@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class SoundManager : Singleton<SoundManager>
@@ -24,8 +25,12 @@ public class SoundManager : Singleton<SoundManager>
     private const string Key_BG = "bgSource";
     private const string Key_SFX = "sfxSource";
     #endregion
-    public float volumeSound;
-    private AudioSource[] obj;
+
+    public float volumeSFX;
+    public float volumeBG;
+    public AudioSource[] obj;
+    public AudioSource[] bgGR;
+    public AudioSource[] sfxGR;
     protected override void Awake()
     {
         base.Awake();
@@ -34,7 +39,8 @@ public class SoundManager : Singleton<SoundManager>
     private void Start()
     {
         this.obj = GameObject.FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        //SetVolume();
+        this.sfxGR = obj.Where(s => s.CompareTag(TagName.TAG_SFXSOUND)).ToArray();
+        this.bgGR = obj.Where(s => s.CompareTag(TagName.TAG_BGSOUND)).ToArray();
     }
     public void Initialize()
     {
@@ -55,10 +61,6 @@ public class SoundManager : Singleton<SoundManager>
         bg.Play();
         this.currentBg = bg;
     }
-    public void StopMusicBG(AudioClip clip)
-    {
-
-    }
     #endregion
     #region SFX Music
     public void PlaySFX(AudioClip clip)
@@ -76,12 +78,12 @@ public class SoundManager : Singleton<SoundManager>
     #endregion
     public void SetVolumeBG(float value)
     {
-        foreach(AudioSource o in obj)
+        foreach(AudioSource o in this.bgGR)
             o.volume = value;
     }
     public void SetVolumeSFX(float value)
     {
-        foreach (AudioSource o in obj)
+        foreach (AudioSource o in this.sfxGR)
             o.volume = value;
     }    
 }
