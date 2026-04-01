@@ -63,6 +63,7 @@ public class GameManager : Singleton<GameManager>
     }
     private IEnumerator PlayGame()
     {
+        LoadComponents();
         this.partical.Play();
         yield return new WaitForSeconds(partical.main.duration * 0.25f);
         SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_playingGame);

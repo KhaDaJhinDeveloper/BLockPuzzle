@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Block : MonoBehaviour
+public class Block : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     public const int Size = 5;
     [SerializeField] private Cell cellPrefab;
@@ -78,6 +79,7 @@ public class Block : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        Debug.Log("mousedown");
         SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_BlockDown);
         transform.localPosition = this.pos + new Vector3 (0, 2.0f, 0);
         transform.localScale = Vector3.one;
@@ -89,7 +91,7 @@ public class Block : MonoBehaviour
     }
     private void OnMouseDrag()
     {
-
+        Debug.Log("mousedrag");
         this.currentMousePosition = Input.mousePosition;
         if ( this.currentMousePosition != this.mousePosition )
         {
@@ -106,6 +108,7 @@ public class Block : MonoBehaviour
     }
     private void OnMouseUp()
     {
+        Debug.Log("mouseup");
         this.mousePosition = Vector3.positiveInfinity;
         this.currentDragPoint = Vector2Int.RoundToInt(this.transform.position - this.center);
         if (this.board.IsPlace(this.currentDragPoint, this.polyominoIndex))
@@ -118,5 +121,52 @@ public class Block : MonoBehaviour
         transform.position = this.pos;
         transform.localScale = this.posscale;
 
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log("down");
+        SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_BlockDown);
+        transform.localPosition = this.pos + new Vector3(0, 2.0f, 0);
+        transform.localScale = Vector3.one;
+        this.mousePosition = eventData.position;
+        this.inputPoint = this.mainCamera.ScreenToWorldPoint(this.mousePosition);
+        this.currentDragPoint = Vector2Int.RoundToInt(this.transform.position - this.center);
+        this.dragPoint = this.currentDragPoint;
+        this.board.HoverBoard(this.currentDragPoint, polyominoIndex);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        Debug.Log("drag");
+        this.currentMousePosition = eventData.position;
+        if ( this.currentMousePosition != this.mousePosition )
+        {
+            this.mousePosition = this.currentMousePosition;
+            var inputDelta = this.mainCamera.ScreenToWorldPoint(this.mousePosition) - this.inputPoint;
+            transform.localPosition = this.pos + inputDelta * 1.2f + new Vector3(0, 2.0f, 0);
+            this.currentDragPoint = Vector2Int.RoundToInt(this.transform.position - this.center);
+            if (this.currentDragPoint != this.dragPoint)
+            {
+                this.dragPoint = this.currentDragPoint;
+                this.board.HoverBoard(this.currentDragPoint, polyominoIndex);
+            }
+        }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        Debug.Log("up");
+        this.mousePosition = Vector3.positiveInfinity;
+        this.currentDragPoint = Vector2Int.RoundToInt(this.transform.position - this.center);
+        if (this.board.IsPlace(this.currentDragPoint, this.polyominoIndex))
+        {
+            SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_PlaceBlock);
+            gameObject.SetActive(false);
+            this.blocks.Remove();
+            this.blocks.CheckCanPlace();
+        }
+        transform.position = this.pos;
+        transform.localScale = this.posscale;
     }
 }
