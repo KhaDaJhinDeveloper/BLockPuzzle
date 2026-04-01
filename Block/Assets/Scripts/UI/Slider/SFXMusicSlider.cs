@@ -1,16 +1,20 @@
 using UnityEngine;
 
-public class SFXMusicSlider : MonoBehaviour
+public class SFXMusicSlider : BaseSlider
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected override void Start()
     {
-        
+        base.Start();
+        if (VolumeSaveAndLoad.Instance.HasData())
+        {
+            LoadSlider(SoundManager.Instance.volumeSFX);
+            this.slider.value = SoundManager.Instance.volumeSFX;
+        }
     }
-
-    // Update is called once per frame
-    void Update()
+    protected override void LoadSlider(float value)
     {
-        
+        base.LoadSlider(value);
+        SoundManager.Instance.SetVolumeSFX(value);
+        SoundManager.Instance.volumeSFX = value;
     }
 }

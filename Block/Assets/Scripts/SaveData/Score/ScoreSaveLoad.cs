@@ -3,21 +3,34 @@ using UnityEngine;
 
 public class ScoreSaveLoad : Singleton<ScoreSaveLoad>, IData
 {
+    private const string KEY = "score.json";
     public void Save()
     {
         ScoreManager score = GameObject.FindFirstObjectByType<ScoreManager>();
         if (score == null) return;
-        ScoreData data = new ScoreData(score.CurentScore, score.BestScore);
+        ScoreData data = new ScoreData( score.bestScore);
         string json = JsonUtility.ToJson(data);
+        string path = Application.persistentDataPath + KEY;
+        File.WriteAllText(path, json);
     }
     public void Load()
     {
-        //string json = File.ReadAllText();
-        //ScoreData data = JsonUtility.FromJson<ScoreData>(json);
+        Debug.Log("File ScoreData" +Application.persistentDataPath);
+        string path = Application.persistentDataPath + KEY;
+        if(path == null) return;
+        string json = File.ReadAllText(path);
+        ScoreData data = JsonUtility.FromJson<ScoreData>(json);
+        ScoreManager score = GameObject.FindFirstObjectByType<ScoreManager>();
+        if (score == null) return;
+        score.bestScore = data.bestScore;
     }
 
     public void Delete()
     {
-        throw new System.NotImplementedException();
+        ScoreManager score = GameObject.FindFirstObjectByType<ScoreManager>();
+        string path = Application.persistentDataPath + KEY;
+        if(File.Exists(path))
+            File.Delete(path);
+        score.Reset();
     }
 }

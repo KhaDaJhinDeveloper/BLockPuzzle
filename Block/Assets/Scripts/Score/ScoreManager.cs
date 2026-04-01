@@ -2,10 +2,8 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    private int curentScore = 0;
-    private int bestScore = 0;
-    public int CurentScore { get => curentScore;}
-    public int BestScore { get => bestScore;}
+    public int curentScore = 0;
+    public int bestScore = 0;
 
     public void IncreaseScore(int score)
     {

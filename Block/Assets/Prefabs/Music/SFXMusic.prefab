@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2462630922524830020}
   m_Layer: 0
   m_Name: SFXMusic
-  m_TagString: Untagged
+  m_TagString: SFXSound
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

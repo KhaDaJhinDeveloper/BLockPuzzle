@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5112885127460013680}
   - component: {fileID: 9089577786462755031}
   - component: {fileID: 8258815365449445044}
+  - component: {fileID: 2424243376459880687}
   m_Layer: 0
   m_Name: DataManager
   m_TagString: Untagged
@@ -57,3 +58,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0ebe2d611e9923448b410e3e3fc1ee3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
+  curentScore: 0
+  bestScore: 0
+--- !u!114 &2424243376459880687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431084314293592854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 751c1a2e9417b284ea1623489633cad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VolumeSaveAndLoad

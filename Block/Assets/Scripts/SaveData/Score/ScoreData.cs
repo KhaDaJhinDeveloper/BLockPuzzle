@@ -3,9 +3,8 @@ public class ScoreData
 {
     public int currentScore;
     public int bestScore;
-    public ScoreData(int currentScore, int bestScore)
+    public ScoreData( int bestScore)
     { 
-        this.currentScore = currentScore; 
         this.bestScore = bestScore; 
     }
 }

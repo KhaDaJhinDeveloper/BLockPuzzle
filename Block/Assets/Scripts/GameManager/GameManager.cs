@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
@@ -8,12 +7,14 @@ public class GameManager : Singleton<GameManager>
     private Board board;
     private ScoreManager ScoreManager;
     private Blocks blocks;
-
+    private ParticleSystem partical;
     private void Start()
     {
         SceneManager.sceneLoaded += OnloadScene;
         StartCoroutine(Delay());
         SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_MainMenu);
+        SaveLoadData.Instance.Load();
+        this.partical = GameObject.FindFirstObjectByType<ParticleSystem>();
     }
     private void Reset()
     {
@@ -29,9 +30,12 @@ public class GameManager : Singleton<GameManager>
     }
     public void Play()
     {
-        SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_playingGame);
-        EventManager.Instance.TriggerEvent(EventName.EVENT_HIDEMAINMENU);
-    }    
+        StartCoroutine(PlayGame());
+    }
+    public void ReturnMainMenu()
+    {
+        StartCoroutine(MainMenu());
+    }
     public void Retry()
     {
         LoadComponents();
@@ -43,6 +47,7 @@ public class GameManager : Singleton<GameManager>
     }
     private void LoadComponents()
     {
+        this.partical.Play();
         this.newBestScore = false;
         this.board = GameObject.FindFirstObjectByType<Board>();
         this.blocks = GameObject.FindFirstObjectByType<Blocks>();
@@ -55,5 +60,25 @@ public class GameManager : Singleton<GameManager>
     private IEnumerator Delay()
     {
         yield return null;
+    }
+    private IEnumerator PlayGame()
+    {
+        LoadComponents();
+        this.partical.Play();
+        yield return new WaitForSeconds(partical.main.duration * 0.25f);
+        SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_playingGame);
+        EventManager.Instance.TriggerEvent(EventName.EVENT_HIDEMAINMENU);
+    }
+    private IEnumerator MainMenu()
+    {
+        Time.timeScale = 1f;
+        this.partical.Play();
+        yield return new WaitForSeconds(partical.main.duration * 0.25f);
+        EventManager.Instance.TriggerEvent(EventName.EVENT_SHOWMAINMENU);
+        SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_MainMenu);
+    }
+    private void OnApplicationQuit()
+    {
+        SaveLoadData.Instance.Save();
     }
 }
