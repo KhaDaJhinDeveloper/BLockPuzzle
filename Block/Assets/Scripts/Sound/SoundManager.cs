@@ -26,26 +26,30 @@ public class SoundManager : Singleton<SoundManager>
     private const string Key_SFX = "sfxSource";
     #endregion
 
-    public float volumeSFX;
-    public float volumeBG;
+    public float volumeSFX =1;
+    public float volumeBG = 1;
     public AudioSource[] obj;
     public AudioSource[] bgGR;
     public AudioSource[] sfxGR;
     protected override void Awake()
     {
         base.Awake();
-        Initialize();
+
     }
     private void Start()
     {
-        this.obj = GameObject.FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        this.sfxGR = obj.Where(s => s.CompareTag(TagName.TAG_SFXSOUND)).ToArray();
-        this.bgGR = obj.Where(s => s.CompareTag(TagName.TAG_BGSOUND)).ToArray();
+        Initialize();
+        SetVolumeBG(volumeBG);
+        SetVolumeSFX(volumeSFX);
     }
     public void Initialize()
     {
         ObjectPooling.Instance.CreatePool(Key_BG, bgSource.gameObject, 3);
         ObjectPooling.Instance.CreatePool(Key_SFX, sfxSource.gameObject, 5);
+        this.obj = GameObject.FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        this.sfxGR = obj.Where(s => s.CompareTag(TagName.TAG_SFXSOUND)).ToArray();
+        this.bgGR = obj.Where(s => s.CompareTag(TagName.TAG_BGSOUND)).ToArray();
+
     }
     #region BG Music
     public void PlayMusicBG(AudioClip clip)
@@ -78,7 +82,7 @@ public class SoundManager : Singleton<SoundManager>
     #endregion
     public void SetVolumeBG(float value)
     {
-        foreach(AudioSource o in this.bgGR)
+        foreach (AudioSource o in this.bgGR)
             o.volume = value;
     }
     public void SetVolumeSFX(float value)

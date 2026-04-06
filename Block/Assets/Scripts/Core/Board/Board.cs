@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -55,7 +55,7 @@ public class Board : MonoBehaviour
             {
                 if (polyominos[i, j] > 0)
                 {
-                    Vector2Int hoverpoint = point + new Vector2Int(j , -i +1);
+                    Vector2Int hoverpoint = point + new Vector2Int(j, -i + polyominRows);
                     if (!IsValidPoint(hoverpoint))
                     {
                         this.hoverPoints.Clear();
@@ -270,7 +270,7 @@ public class Board : MonoBehaviour
             {
                 if (polyominos[i, j] > 0)
                 {
-                    Vector2Int hoverpoint = point + new Vector2Int(j, -i + 1);
+                    Vector2Int hoverpoint = point + new Vector2Int(j, -i + polyominosRow);
                     if(!IsValidPoint(hoverpoint)) return false;
                     result.Add(hoverpoint);
                 }

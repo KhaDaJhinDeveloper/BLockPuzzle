@@ -27,7 +27,7 @@ public class Block : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
     #endregion
     private Blocks blocks;
 
-    public int PolyominoIndex { get => polyominoIndex;}
+    public int PolyominoIndex { get => polyominoIndex; }
 
     private void Awake()
     {
@@ -39,11 +39,11 @@ public class Block : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
     {
         for (int i = 0; i < Size; i++)
         {
-            for(int j = 0; j < Size; j++)
+            for (int j = 0; j < Size; j++)
             {
-                this.cells[i ,j] = Instantiate(this.cellPrefab, transform);
-            }    
-        }       
+                this.cells[i, j] = Instantiate(this.cellPrefab, transform);
+            }
+        }
         this.pos = transform.position;
         this.posscale = transform.localScale;
     }
@@ -54,19 +54,19 @@ public class Block : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
         int[,] polyomino = Polyominos.Get(polyomihnoIndex);
         int polyominoRow = polyomino.GetLength(0);
         int polyominoCol = polyomino.GetLength(1);
-        this.center = new Vector2(polyominoCol * 0.5f, polyominoRow  *0.5f);
-        for (int i = 0;i < polyominoRow; i++)
+        this.center = new Vector2(polyominoCol * 0.5f, polyominoRow * 0.5f);
+        for (int i = 0; i < polyominoRow; i++)
         {
-            for( int j = 0;j < polyominoCol; j++)
+            for (int j = 0; j < polyominoCol; j++)
             {
-                if (polyomino[i,j] > 0)
+                if (polyomino[i, j] > 0)
                 {
-                    this.cells[i, j].transform.localPosition = new(j - center.x, -(i - center.y + 1.0f) , 0);
+                    this.cells[i, j].transform.localPosition = new(j - center.x, -(i - center.y), 0);
                     this.cells[i, j].Normal();
-                }    
-            }    
-        }            
-    }    
+                }
+            }
+        }
+    }
     public void Hide()
     {
         for (int i = 0; i < Size; i++)
@@ -81,10 +81,10 @@ public class Block : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
     {
         Debug.Log("mousedown");
         SoundManager.Instance.PlaySFX(SoundManager.Instance.sfx_BlockDown);
-        transform.localPosition = this.pos + new Vector3 (0, 2.0f, 0);
+        transform.localPosition = this.pos + new Vector3(0, 2.0f, 0);
         transform.localScale = Vector3.one;
         this.mousePosition = Input.mousePosition;
-        this.inputPoint = this.mainCamera.ScreenToWorldPoint (this.mousePosition);
+        this.inputPoint = this.mainCamera.ScreenToWorldPoint(this.mousePosition);
         this.currentDragPoint = Vector2Int.RoundToInt(this.transform.position - this.center);
         this.dragPoint = this.currentDragPoint;
         this.board.HoverBoard(this.currentDragPoint, polyominoIndex);
@@ -93,7 +93,7 @@ public class Block : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
     {
         Debug.Log("mousedrag");
         this.currentMousePosition = Input.mousePosition;
-        if ( this.currentMousePosition != this.mousePosition )
+        if (this.currentMousePosition != this.mousePosition)
         {
             this.mousePosition = this.currentMousePosition;
             var inputDelta = this.mainCamera.ScreenToWorldPoint(this.mousePosition) - this.inputPoint;
@@ -140,7 +140,7 @@ public class Block : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
     {
         Debug.Log("drag");
         this.currentMousePosition = eventData.position;
-        if ( this.currentMousePosition != this.mousePosition )
+        if (this.currentMousePosition != this.mousePosition)
         {
             this.mousePosition = this.currentMousePosition;
             var inputDelta = this.mainCamera.ScreenToWorldPoint(this.mousePosition) - this.inputPoint;

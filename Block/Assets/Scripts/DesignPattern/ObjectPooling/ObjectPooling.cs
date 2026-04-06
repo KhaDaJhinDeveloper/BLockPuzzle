@@ -9,7 +9,7 @@ public class ObjectPooling : Singleton<ObjectPooling>
     protected override void Awake()
     {
         base.Awake();
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        //SceneManager.sceneLoaded += OnSceneLoaded;
     }
     public void CreatePool(string key, GameObject prefab, int poolSize)
     {
@@ -70,7 +70,7 @@ public class ObjectPooling : Singleton<ObjectPooling>
     }
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        //SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     public void PoolClear()
     {
