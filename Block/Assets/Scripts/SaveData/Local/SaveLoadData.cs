@@ -1,6 +1,5 @@
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 public class SaveLoadData : Singleton<SaveLoadData>,IData
 {
     public void Save()
@@ -17,6 +16,5 @@ public class SaveLoadData : Singleton<SaveLoadData>,IData
     {
         ScoreSaveLoad.Instance.Delete();
         VolumeSaveAndLoad.Instance.Delete();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

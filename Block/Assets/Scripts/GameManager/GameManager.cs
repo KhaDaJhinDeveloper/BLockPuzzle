@@ -7,14 +7,19 @@ public class GameManager : Singleton<GameManager>
     private Board board;
     private ScoreManager ScoreManager;
     private Blocks blocks;
-    private ParticleSystem partical;
+    [SerializeField]private ParticleSystem partical;
+    protected override void Awake()
+    {
+        base.Awake();
+        SaveLoadData.Instance.Load();  
+    }
     private void Start()
     {
         SceneManager.sceneLoaded += OnloadScene;
+        this.board = GameObject.FindFirstObjectByType<Board>();
+        this.blocks = GameObject.FindFirstObjectByType<Blocks>();
+        this.ScoreManager = GameObject.FindFirstObjectByType<ScoreManager>();
         StartCoroutine(Delay());
-        SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_MainMenu);
-        SaveLoadData.Instance.Load();
-        this.partical = GameObject.FindFirstObjectByType<ParticleSystem>();
     }
     private void Reset()
     {
@@ -38,6 +43,7 @@ public class GameManager : Singleton<GameManager>
     }
     public void Retry()
     {
+        this.partical.Play();
         LoadComponents();
     }    
     public void GameOVer()
@@ -46,37 +52,34 @@ public class GameManager : Singleton<GameManager>
         EventManager.Instance.TriggerEvent(EventName.EVENT_SHOWGAMEOVER);
     }
     private void LoadComponents()
-    {
-        this.partical.Play();
+    { 
         this.newBestScore = false;
-        this.board = GameObject.FindFirstObjectByType<Board>();
-        this.blocks = GameObject.FindFirstObjectByType<Blocks>();
-        this.ScoreManager = GameObject.FindFirstObjectByType<ScoreManager>();
-        if(this.board == null && this.blocks == null && this.ScoreManager == null) return;
         this.board.Retry();
         this.blocks.Retry();
         this.ScoreManager.Retry();
     }
     private IEnumerator Delay()
     {
-        yield return null;
+        yield return new WaitForSeconds(0.1f);
+        SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_MainMenu);
     }
     private IEnumerator PlayGame()
     {
-        LoadComponents();
-        this.partical.Play();
-        yield return new WaitForSeconds(partical.main.duration * 0.25f);
         SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_playingGame);
+        this.partical.Play();
+        yield return new WaitForSeconds(1f);
+        LoadComponents();
         EventManager.Instance.TriggerEvent(EventName.EVENT_HIDEMAINMENU);
+        EventManager.Instance.TriggerEvent(EventName.EVENT_HIDEMENUPAUSE);
     }
     private IEnumerator MainMenu()
     {
         Time.timeScale = 1f;
         this.partical.Play();
-        yield return new WaitForSeconds(partical.main.duration * 0.25f);
+        yield return new WaitForSeconds(1f);
         EventManager.Instance.TriggerEvent(EventName.EVENT_SHOWMAINMENU);
         SoundManager.Instance.PlayMusicBG(SoundManager.Instance.bg_MainMenu);
-    }
+}
     private void OnApplicationQuit()
     {
         SaveLoadData.Instance.Save();

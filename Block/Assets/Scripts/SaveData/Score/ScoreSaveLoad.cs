@@ -15,9 +15,9 @@ public class ScoreSaveLoad : Singleton<ScoreSaveLoad>, IData
     }
     public void Load()
     {
-        Debug.Log("File ScoreData" +Application.persistentDataPath);
         string path = Application.persistentDataPath + KEY;
-        if(path == null) return;
+        if (!File.Exists(path)) return;
+        Debug.Log("File ScoreData" + path);
         string json = File.ReadAllText(path);
         ScoreData data = JsonUtility.FromJson<ScoreData>(json);
         ScoreManager score = GameObject.FindFirstObjectByType<ScoreManager>();

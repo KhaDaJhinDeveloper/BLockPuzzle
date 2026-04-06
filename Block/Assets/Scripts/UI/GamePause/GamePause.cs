@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GamePause : MonoBehaviour
@@ -7,7 +8,6 @@ public class GamePause : MonoBehaviour
     {
         EventManager.Instance.Subscribe(EventName.EVENT_SHOWMENUPAUSE, GamePauseShow);
         EventManager.Instance.Subscribe(EventName.EVENT_HIDEMENUPAUSE, GamePauseHide);
-        GamePauseHide();
     }
     public void GamePauseShow()
     {
